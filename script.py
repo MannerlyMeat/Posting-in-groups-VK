@@ -14,9 +14,14 @@ import os.path
 def post_script():
 
     #выгрузка id групп
-    groups = np.loadtxt("groups_id.txt", delimiter='\t', dtype=np.int)
+    groups = np.loadtxt("groups.txt", delimiter='\t', dtype=np.int)
     #подсчет элементов в массиве
-    temp = len(groups)
+    try:
+        temp = len(groups)
+    except TypeError:
+        print("В файле с группами должно быть больше одной группы")
+        input("Нажмите Enter для продолжения")
+        exit()
     app_id = open('app_id.txt')
     
     
@@ -84,15 +89,39 @@ def post_script():
         try:
             if img_yn == 1 and link_yn == 0:
                 vk_api.wall.post(message=' '.join(map(str,text)), owner_id=groups[i], attachments="photo"+owner+"_"+photo_id)
+                post_id = vk_api.wall.get(owner_id = groups[1], count = 1)
+                post_id = post_id['items']
+                post_id = post_id[0]
+                post_id = post_id['id']
+                with open("post_address.txt", "a") as file:
+                    file.write("vk.com/wall" + str(groups[i]) + "_" + str(post_id)+ "\n")
                 time.sleep(5)
             elif img_yn == 0 and link_yn == 0:
                 vk_api.wall.post(message=' '.join(map(str,text)), owner_id=groups[i])
+                post_id = vk_api.wall.get(owner_id = groups[1], count = 1)
+                post_id = post_id['items']
+                post_id = post_id[0]
+                post_id = post_id['id']
+                with open("post_address.txt", "a") as file:
+                    file.write("vk.com/wall" + str(groups[i]) + "_" + str(post_id)+ "\n")
                 time.sleep(5)
             elif img_yn == 0 and link_yn == 1:
                 vk_api.wall.post(message=' '.join(map(str,text)) + "\n Ссылка - " + post_link, owner_id=groups[i])
+                post_id = vk_api.wall.get(owner_id = groups[1], count = 1)
+                post_id = post_id['items']
+                post_id = post_id[0]
+                post_id = post_id['id']
+                with open("post_address.txt", "a") as file:
+                    file.write("vk.com/wall" + str(groups[i]) + "_" + str(post_id)+ "\n")
                 time.sleep(5)
             elif img_yn == 1 and link_yn == 1:
-                vk_api.wall.post(message=' '.join(map(str,text)) + "\n Ссылка - " + post_link, owner_id=groups[i], attachments="photo"+owner+"_"+photo_id)
+                vk_api.wall.post(message=' '.join(map(str,text)) + "\n Ссылка - " + post_link, owner_id=groups[i], attachments="photo"+owner+"_" + photo_id)
+                post_id = vk_api.wall.get(owner_id = groups[1], count = 1)
+                post_id = post_id['items']
+                post_id = post_id[0]
+                post_id = post_id['id']
+                with open("post_address.txt", "a") as file:
+                    file.write("vk.com/wall" + str(groups[i]) + "_" + str(post_id)+ "\n")
                 time.sleep(5)
             print('Успешно')
             
